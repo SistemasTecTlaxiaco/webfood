@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interacción con Soroban</title>
+</head>
+<body>
+    <h1>Gestión de Productos</h1>
+    <div>
+        <h3>Agregar Producto</h3>
+        <form id="addProductForm">
+            <input type="text" id="productName" placeholder="Nombre del Producto" required />
+            <input type="number" id="productQuantity" placeholder="Cantidad" required />
+            <input type="number" id="productPrice" placeholder="Precio" required />
+            <button type="submit">Agregar Producto</button>
+        </form>
+    </div>
+
+    <h3>Lista de Productos</h3>
+    <div id="productList">
+        <!-- Aquí se mostrarán los productos agregados -->
+    </div>
+
+    <script>
+        // Array para almacenar los productos
+        let products = [];
+
+        // Función para mostrar los productos en la lista
+        function displayProducts() {
+            const productListDiv = document.getElementById("productList");
+            productListDiv.innerHTML = ""; // Limpiar lista actual
+
+            products.forEach((product, index) => {
+                const productDiv = document.createElement("div");
+                productDiv.innerHTML = `
+                    <p><strong>${product.name}</strong> - Cantidad: ${product.quantity} - Precio: $${product.price}</p>
+                    <button onclick="updateProduct(${index})">Actualizar</button>
+                    <button onclick="deleteProduct(${index})">Eliminar</button>
+                `;
+                productListDiv.appendChild(productDiv);
+            });
+        }
+
+        // Función para agregar un producto
+        document.getElementById("addProductForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const productName = document.getElementById("productName").value;
+            const productQuantity = document.getElementById("productQuantity").value;
+            const productPrice = document.getElementById("productPrice").value;
+
+            const newProduct = {
+                name: productName,
+                quantity: productQuantity,
+                price: productPrice
+            };
+
+            products.push(newProduct); // Agregar el producto al array
+            displayProducts(); // Mostrar productos actualizados
+
+            // Limpiar el formulario
+            document.getElementById("addProductForm").reset();
+        });
+
+        // Función para actualizar un producto
+        function updateProduct(index) {
+            const product = products[index];
+            const newQuantity = prompt("Nueva cantidad", product.quantity);
+            const newPrice = prompt("Nuevo precio", product.price);
+
+            if (newQuantity !== null && newPrice !== null) {
+                products[index].quantity = newQuantity;
+                products[index].price = newPrice;
+                displayProducts(); // Mostrar productos actualizados
+            }
+        }
+
+        // Función para eliminar un producto
+        function deleteProduct(index) {
+            products.splice(index, 1); // Eliminar el producto del array
+            displayProducts(); // Mostrar productos actualizados
+        }
+    </script>
+</body>
+</html>
